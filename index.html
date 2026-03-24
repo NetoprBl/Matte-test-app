@@ -8,56 +8,88 @@
 
 <style>
 
+/* POZADINA */
 body{
   background:#cfe8ff;
   font-family:Arial;
   padding:20px;
 }
 
+/* STRANICE */
 .page{display:none;}
 .active{display:block;}
 
 h1,h2{text-align:center;}
 
+/* CENTRIRANI BLOK TESTA */
+#questions{
+  max-width:700px;
+  margin:0 auto;
+}
+
+/* ZADATAK */
 .task{
-  margin-bottom:35px;
+  margin-bottom:45px;
   font-size:18px;
 }
 
+/* VELIKI REDNI BROJ */
 .number{
   font-weight:bold;
-  font-size:28px;
-  margin-bottom:10px;
+  font-size:30px;
+  margin-bottom:15px;
 }
 
+/* PODZADATAK */
 .sub{
-  margin-left:20px;
-  margin-bottom:12px;
+  margin-left:40px;
+  margin-bottom:22px;
   display:flex;
   align-items:flex-start;
 }
 
+/* Oznaka a. b. c. */
 .label{
-  width:28px;
+  width:32px;
   font-weight:bold;
 }
 
+/* Tekst zadatka */
 .text{
-  margin-left:12px;
+  margin-left:14px;
 }
 
+/* ODGOVOR */
 .answer{
-  margin-left:60px;
-  margin-top:6px;
+  margin-left:70px;
+  margin-top:8px;
 }
 
+/* TEXTBOX */
 input{
-  width:110px;
-  padding:7px;
+  width:120px;
+  padding:8px;
   font-size:18px;
   text-align:center;
 }
 
+/* PRAVI RAZLOMAK */
+.frac{
+  display:inline-block;
+  text-align:center;
+  vertical-align:middle;
+}
+
+.frac span{
+  display:block;
+  padding:0 4px;
+}
+
+.frac .top{
+  border-bottom:2px solid black;
+}
+
+/* Dugmad */
 button{
   display:block;
   margin:20px auto;
@@ -76,22 +108,30 @@ button{
 <button onclick="startTest()">Starta test</button>
 </div>
 
+
 <!-- STRANA 2 -->
 <div id="page2" class="page">
 <h2>Test</h2>
+
 <form id="testForm">
 <div id="questions"></div>
 </form>
+
 <button onclick="finishTest()">Avsluta test</button>
+
 </div>
+
 
 <!-- STRANA 3 -->
 <div id="page3" class="page">
 <h2>Resultat</h2>
 <h1 id="score" style="text-align:center"></h1>
+
 <button onclick="showTest()">Rätta test</button>
 <button onclick="newTest()">Nytt test</button>
+
 </div>
+
 
 
 <script>
@@ -114,9 +154,18 @@ function randomName(){
 }
 
 
-/* =========================
-   JEDNACINE — x = textbox
-========================= */
+/* PRAVI RAZLOMAK */
+
+function frac(top,bottom){
+  return `
+  <span class="frac">
+    <span class="top">${top}</span>
+    <span>${bottom}</span>
+  </span>`;
+}
+
+
+/* JEDNACINE */
 
 function eqDivide1(id){
 
@@ -143,7 +192,7 @@ function eqDivide2(id){
   answers[id]=x;
 
   return `
-  ${b} = ${c} / x
+  ${b} = ${frac(c,"x")}
   <div class="answer">
     x = <input id="${id}" type="number">
   </div>`;
