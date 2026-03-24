@@ -8,7 +8,6 @@
 
 <style>
 
-/* POZADINA */
 body{
   background:#cfe8ff;
   font-family:Arial;
@@ -23,7 +22,7 @@ body{
 
 .active{display:flex;}
 
-/* CENTRIRANJE STRANA 1 i 3 */
+/* CENTRIRANE STRANE 1 i 3 */
 .center{
   flex-direction:column;
   justify-content:center;
@@ -39,7 +38,7 @@ body{
 
 /* BLOK TESTA */
 #questions{
-  max-width:750px;
+  max-width:760px;
   margin:0 auto;
 }
 
@@ -53,44 +52,43 @@ body{
 .number{
   font-weight:bold;
   font-size:28px;
-  display:inline-block;
   margin-right:10px;
 }
 
-/* PODZADATAK RED */
+/* RED PODZADATKA */
 .sub{
   margin-left:40px;
-  margin-bottom:18px;
+  margin-bottom:20px;
   display:flex;
   align-items:center;
+  gap:10px;
 }
 
-/* a) b) c) */
+/* OZNAKA a) b) c) */
 .label{
   width:32px;
   font-weight:bold;
 }
 
-/* TEKST ZADATKA */
+/* TEKST */
 .text{
-  margin-left:10px;
   flex:1;
 }
 
-/* ODGOVOR ISTI RED */
+/* ODGOVOR — ISTI RED */
 .inlineAnswer{
   margin-left:40px;
 }
 
-/* UZI TEXTBOX */
+/* UŽI INPUT */
 .smallInput{
-  width:70px; /* oko 4 cifre */
+  width:70px;
   padding:6px;
   font-size:18px;
   text-align:center;
 }
 
-/* VEĆI TEXTBOX za tekstualne */
+/* VEĆI INPUT */
 .bigInput{
   width:120px;
   padding:7px;
@@ -98,7 +96,6 @@ body{
   text-align:center;
 }
 
-/* Dugmad */
 button{
   margin:20px;
   padding:12px 25px;
@@ -162,9 +159,8 @@ function randomName(){
 }
 
 
-/* ======= ZADACI ======= */
+/* ======= JEDNACINE ======= */
 
-/* b = x / a */
 function eqDivide1(id){
 
   let a=rand(2,10);
@@ -181,7 +177,6 @@ function eqDivide1(id){
 }
 
 
-/* b = c / x  → razlomak */
 function eqDivide2(id){
 
   let x=rand(2,10);
@@ -198,7 +193,6 @@ function eqDivide2(id){
 }
 
 
-/* a · x = b */
 function eqMultiply(id){
 
   let a=rand(2,20);
@@ -215,7 +209,8 @@ function eqMultiply(id){
 }
 
 
-/* TEKSTUALNI */
+/* ======= TEKSTUALNI — SVE U ISTOM REDU ======= */
+
 function wordDifference(id){
 
   let n1=randomName();
@@ -232,12 +227,14 @@ function wordDifference(id){
     ${n1} köpte en tårta för ${p1} kr och
     ${n2} betalade ${p2} kr.
     Hur mycket dyrare var den första?
-    <br><br>
-    Svar: <input class="bigInput" id="${id}" type="number">`;
+    <span class="inlineAnswer">
+      Svar: <input class="bigInput" id="${id}" type="number">
+    </span>`;
 }
 
 
 /* RANDOM */
+
 function randomTask(id){
 
   let t=rand(1,4);
