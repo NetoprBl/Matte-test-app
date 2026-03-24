@@ -8,45 +8,52 @@
 
 <style>
 
-/* Pozadina svetlo plava */
 body{
   background:#cfe8ff;
   font-family:Arial;
   padding:20px;
 }
 
-/* Stranice */
 .page{display:none;}
 .active{display:block;}
 
 h1,h2{text-align:center;}
 
 .task{
-  margin-bottom:25px;
+  margin-bottom:35px;
   font-size:18px;
 }
 
-/* Redni broj */
 .number{
   font-weight:bold;
-  margin-bottom:5px;
+  font-size:28px;
+  margin-bottom:10px;
 }
 
-/* Podzadaci */
 .sub{
   margin-left:20px;
-  margin-bottom:8px;
+  margin-bottom:12px;
+  display:flex;
+  align-items:flex-start;
 }
 
-/* Odgovor linija */
+.label{
+  width:28px;
+  font-weight:bold;
+}
+
+.text{
+  margin-left:12px;
+}
+
 .answer{
-  margin-left:40px;
+  margin-left:60px;
+  margin-top:6px;
 }
 
-/* Textbox */
 input{
-  width:90px;
-  padding:6px;
+  width:110px;
+  padding:7px;
   font-size:18px;
   text-align:center;
 }
@@ -65,46 +72,31 @@ button{
 
 <!-- STRANA 1 -->
 <div id="page1" class="page active">
-
 <h1>Matteprov</h1>
-
 <button onclick="startTest()">Starta test</button>
-
 </div>
-
 
 <!-- STRANA 2 -->
 <div id="page2" class="page">
-
 <h2>Test</h2>
-
 <form id="testForm">
 <div id="questions"></div>
 </form>
-
 <button onclick="finishTest()">Avsluta test</button>
-
 </div>
-
 
 <!-- STRANA 3 -->
 <div id="page3" class="page">
-
 <h2>Resultat</h2>
 <h1 id="score" style="text-align:center"></h1>
-
 <button onclick="showTest()">Rätta test</button>
 <button onclick="newTest()">Nytt test</button>
-
 </div>
-
 
 
 <script>
 
-/* =========================
-   GLOBALNO
-========================= */
+/* GLOBALNO */
 
 let answers = {};
 
@@ -123,7 +115,7 @@ function randomName(){
 
 
 /* =========================
-   JEDNACINE
+   JEDNACINE — x = textbox
 ========================= */
 
 function eqDivide1(id){
@@ -137,8 +129,7 @@ function eqDivide1(id){
   return `
   ${b} = x / ${a}
   <div class="answer">
-    x = ? <br>
-    <input id="${id}" type="number">
+    x = <input id="${id}" type="number">
   </div>`;
 }
 
@@ -154,8 +145,7 @@ function eqDivide2(id){
   return `
   ${b} = ${c} / x
   <div class="answer">
-    x = ? <br>
-    <input id="${id}" type="number">
+    x = <input id="${id}" type="number">
   </div>`;
 }
 
@@ -171,59 +161,12 @@ function eqMultiply(id){
   return `
   ${a} · x = ${b}
   <div class="answer">
-    x = ? <br>
-    <input id="${id}" type="number">
+    x = <input id="${id}" type="number">
   </div>`;
 }
 
 
-/* Okrugli brojevi */
-
-function eqRound(id){
-
-  let a=[20,30,40,50,100,200,300][rand(0,6)];
-  let x=rand(2,10);
-  let b=a*x;
-
-  answers[id]=x;
-
-  return `
-  ${a} · x = ${b}
-  <div class="answer">
-    x = ? <br>
-    <input id="${id}" type="number">
-  </div>`;
-}
-
-
-/* =========================
-   TEKSTUALNI ZADACI
-========================= */
-
-function wordPrice(id){
-
-  let name=randomName();
-
-  let qty=rand(3,8);
-  let price=rand(5,15);
-
-  let total=qty*price;
-
-  let money=rand(40,80);
-
-  let result=Math.floor(money/price);
-
-  answers[id]=result;
-
-  return `
-  ${name} köpte ${qty} glassar för ${total} kr.
-  Hur många glassar kan han köpa för ${money} kr?
-
-  <div class="answer">
-    Svar: <input id="${id}" type="number">
-  </div>`;
-}
-
+/* TEKSTUALNI */
 
 function wordDifference(id){
 
@@ -248,26 +191,21 @@ function wordDifference(id){
 }
 
 
-/* =========================
-   RANDOM ZADATAK
-========================= */
+/* RANDOM ZADATAK */
 
 function randomTask(id){
 
-  let t=rand(1,5);
+  let t=rand(1,4);
 
   if(t===1) return eqDivide1(id);
   if(t===2) return eqDivide2(id);
   if(t===3) return eqMultiply(id);
-  if(t===4) return eqRound(id);
 
   return wordDifference(id);
 }
 
 
-/* =========================
-   GENERISI TEST
-========================= */
+/* GENERISI TEST */
 
 function generateTest(){
 
@@ -281,9 +219,21 @@ function generateTest(){
     <div class="task">
       <div class="number">${q}.</div>
 
-      <div class="sub">a) ${randomTask("q"+q+"a")}</div>
-      <div class="sub">b) ${randomTask("q"+q+"b")}</div>
-      <div class="sub">c) ${randomTask("q"+q+"c")}</div>
+      <div class="sub">
+        <div class="label">a.</div>
+        <div class="text">${randomTask("q"+q+"a")}</div>
+      </div>
+
+      <div class="sub">
+        <div class="label">b.</div>
+        <div class="text">${randomTask("q"+q+"b")}</div>
+      </div>
+
+      <div class="sub">
+        <div class="label">c.</div>
+        <div class="text">${randomTask("q"+q+"c")}</div>
+      </div>
+
     </div>`;
   }
 
@@ -291,9 +241,7 @@ function generateTest(){
 }
 
 
-/* =========================
-   NAVIGACIJA
-========================= */
+/* NAVIGACIJA */
 
 function showPage(id){
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
@@ -313,9 +261,7 @@ function newTest(){
 }
 
 
-/* =========================
-   OCENJIVANJE
-========================= */
+/* OCENJIVANJE */
 
 function finishTest(){
 
