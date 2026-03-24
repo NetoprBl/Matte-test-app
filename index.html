@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Matteprov</title>
+<title>Matteövning</title>
 
 <style>
 body{
@@ -13,13 +13,13 @@ body{
   padding:15px;
 }
 
-.page{ display:none; }
-.active{ display:block; }
+.page{display:none;}
+.active{display:block;}
 
 input{
-  width:80px;
+  width:90px;
   padding:6px;
-  margin:4px;
+  margin:6px;
   font-size:18px;
   text-align:center;
 }
@@ -37,7 +37,18 @@ button{
 <!-- STRANA 1 -->
 <div id="page1" class="page active">
 
-<h1>Matteprov</h1>
+<h1>Matteövning</h1>
+
+<p>Välj nivå:</p>
+
+<select id="level">
+  <option value="4">Årskurs 4</option>
+  <option value="5">Årskurs 5</option>
+  <option value="6">Årskurs 6</option>
+</select>
+
+<br><br>
+
 <button onclick="startTest()">Starta test</button>
 
 </div>
@@ -72,76 +83,86 @@ button{
 <script>
 
 /* =========================
-   GLOBALNE PROMENLJIVE
+   GLOBALNO
 ========================= */
 
 let answers = {};
-
-
-/* =========================
-   GENERATOR ZADATAKA
-========================= */
+let level = 4;
 
 function rand(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
 
-/* Generise jedan podzadatak */
-function generateTask(id){
+/* =========================
+   GENERATOR ZADATAKA
+========================= */
 
-  let type = rand(1,4);
+function taskArithmetic(id){
 
-  let a,b,text,correct;
+  let a = rand(1,50);
+  let b = rand(1,50);
 
-  if(type===1){ // sabiranje
-    a=rand(1,20);
-    b=rand(1,20);
-    text = a + " + " + b + " = ";
-    correct = a+b;
-  }
+  answers[id]=a+b;
 
-  else if(type===2){ // oduzimanje
-    a=rand(10,30);
-    b=rand(1,10);
-    text = a + " − " + b + " = ";
-    correct = a-b;
-  }
-
-  else if(type===3){ // mnozenje
-    a=rand(2,10);
-    b=rand(2,10);
-    text = a + " × " + b + " = ";
-    correct = a*b;
-  }
-
-  else{ // deljenje
-    b=rand(2,10);
-    correct=rand(2,10);
-    a=b*correct;
-    text = a + " / " + b + " = ";
-  }
-
-  answers[id] = correct;
-
-  return text + '<input id="'+id+'" type="number">';
+  return a + " + " + b + " = <input id='"+id+"' type='number'>";
 }
 
 
-/* Generise ceo test */
+function taskMultiply(id){
+
+  let a = rand(2,10);
+  let b = rand(2,10);
+
+  answers[id]=a*b;
+
+  return a + " × " + b + " = <input id='"+id+"' type='number'>";
+}
+
+
+function taskEquation(id){
+
+  let x = rand(2,10);
+  let d = rand(2,10);
+
+  let left = x/d;
+
+  answers[id]=x;
+
+  return left + " = x / " + d + " → x = <input id='"+id+"' type='number'>";
+}
+
+
+function taskWord(id){
+
+  let apples = rand(5,20);
+  let eat = rand(1,apples-1);
+
+  answers[id]=apples-eat;
+
+  return "Anna har " + apples +
+  " äpplen. Hon äter " + eat +
+  ". Hur många är kvar? <input id='"+id+"' type='number'>";
+}
+
+
+/* =========================
+   GENERISI CEO TEST
+========================= */
+
 function generateTest(){
 
-  answers = {};
+  answers={};
 
   let html="";
 
   for(let q=1;q<=6;q++){
 
-    html += "<p>" + q + ") ";
+    html += "<p>" + q + ")<br>";
 
-    html += "a) " + generateTask("q"+q+"a") + "<br>";
-    html += "b) " + generateTask("q"+q+"b") + "<br>";
-    html += "c) " + generateTask("q"+q+"c");
+    html += "a) " + taskArithmetic("q"+q+"a") + "<br>";
+    html += "b) " + taskMultiply("q"+q+"b") + "<br>";
+    html += "c) " + taskWord("q"+q+"c");
 
     html += "</p>";
   }
@@ -164,7 +185,11 @@ function showPage(id){
 }
 
 function startTest(){
+
+  level = document.getElementById("level").value;
+
   generateTest();
+
   showPage("page2");
 }
 
