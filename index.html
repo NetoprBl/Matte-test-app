@@ -12,87 +12,95 @@
 body{
   background:#cfe8ff;
   font-family:Arial;
-  padding:20px;
+  margin:0;
 }
 
 /* STRANICE */
-.page{display:none;}
-.active{display:block;}
+.page{
+  display:none;
+  min-height:100vh;
+}
 
-h1,h2{text-align:center;}
+.active{display:flex;}
 
-/* CENTRIRANI BLOK TESTA */
+/* CENTRIRANJE STRANA 1 i 3 */
+.center{
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+
+/* TEST STRANA */
+.testPage{
+  display:block;
+  padding:20px;
+}
+
+/* BLOK TESTA */
 #questions{
-  max-width:700px;
+  max-width:750px;
   margin:0 auto;
 }
 
 /* ZADATAK */
 .task{
-  margin-bottom:45px;
+  margin-bottom:35px;
   font-size:18px;
 }
 
-/* VELIKI REDNI BROJ */
+/* REDNI BROJ */
 .number{
   font-weight:bold;
-  font-size:30px;
-  margin-bottom:15px;
+  font-size:28px;
+  display:inline-block;
+  margin-right:10px;
 }
 
-/* PODZADATAK */
+/* PODZADATAK RED */
 .sub{
   margin-left:40px;
-  margin-bottom:22px;
+  margin-bottom:18px;
   display:flex;
-  align-items:flex-start;
+  align-items:center;
 }
 
-/* Oznaka a. b. c. */
+/* a) b) c) */
 .label{
   width:32px;
   font-weight:bold;
 }
 
-/* Tekst zadatka */
+/* TEKST ZADATKA */
 .text{
-  margin-left:14px;
+  margin-left:10px;
+  flex:1;
 }
 
-/* ODGOVOR */
-.answer{
-  margin-left:70px;
-  margin-top:8px;
+/* ODGOVOR ISTI RED */
+.inlineAnswer{
+  margin-left:40px;
 }
 
-/* TEXTBOX */
-input{
-  width:120px;
-  padding:8px;
+/* UZI TEXTBOX */
+.smallInput{
+  width:70px; /* oko 4 cifre */
+  padding:6px;
   font-size:18px;
   text-align:center;
 }
 
-/* PRAVI RAZLOMAK */
-.frac{
-  display:inline-block;
+/* VEĆI TEXTBOX za tekstualne */
+.bigInput{
+  width:120px;
+  padding:7px;
+  font-size:18px;
   text-align:center;
-  vertical-align:middle;
-}
-
-.frac span{
-  display:block;
-  padding:0 4px;
-}
-
-.frac .top{
-  border-bottom:2px solid black;
 }
 
 /* Dugmad */
 button{
-  display:block;
-  margin:20px auto;
+  margin:20px;
   padding:12px 25px;
   font-size:18px;
 }
@@ -103,33 +111,33 @@ button{
 <body>
 
 <!-- STRANA 1 -->
-<div id="page1" class="page active">
-<h1>Matteprov</h1>
-<button onclick="startTest()">Starta test</button>
+<div id="page1" class="page active center">
+  <h1>Matteprov</h1>
+  <button onclick="startTest()">Starta test</button>
 </div>
 
 
 <!-- STRANA 2 -->
-<div id="page2" class="page">
-<h2>Test</h2>
+<div id="page2" class="page testPage">
+  <h2 style="text-align:center">Test</h2>
 
-<form id="testForm">
-<div id="questions"></div>
-</form>
+  <form id="testForm">
+    <div id="questions"></div>
+  </form>
 
-<button onclick="finishTest()">Avsluta test</button>
-
+  <div style="text-align:center">
+    <button onclick="finishTest()">Avsluta test</button>
+  </div>
 </div>
 
 
 <!-- STRANA 3 -->
-<div id="page3" class="page">
-<h2>Resultat</h2>
-<h1 id="score" style="text-align:center"></h1>
+<div id="page3" class="page center">
+  <h2>Resultat</h2>
+  <h1 id="score"></h1>
 
-<button onclick="showTest()">Rätta test</button>
-<button onclick="newTest()">Nytt test</button>
-
+  <button onclick="showTest()">Rätta test</button>
+  <button onclick="newTest()">Nytt test</button>
 </div>
 
 
@@ -154,19 +162,9 @@ function randomName(){
 }
 
 
-/* PRAVI RAZLOMAK */
+/* ======= ZADACI ======= */
 
-function frac(top,bottom){
-  return `
-  <span class="frac">
-    <span class="top">${top}</span>
-    <span>${bottom}</span>
-  </span>`;
-}
-
-
-/* JEDNACINE */
-
+/* b = x / a */
 function eqDivide1(id){
 
   let a=rand(2,10);
@@ -176,13 +174,14 @@ function eqDivide1(id){
   answers[id]=x;
 
   return `
-  ${b} = x / ${a}
-  <div class="answer">
-    x = <input id="${id}" type="number">
-  </div>`;
+    ${b} = x / ${a}
+    <span class="inlineAnswer">
+      x = <input class="smallInput" id="${id}" type="number">
+    </span>`;
 }
 
 
+/* b = c / x  → razlomak */
 function eqDivide2(id){
 
   let x=rand(2,10);
@@ -192,13 +191,14 @@ function eqDivide2(id){
   answers[id]=x;
 
   return `
-  ${b} = ${frac(c,"x")}
-  <div class="answer">
-    x = <input id="${id}" type="number">
-  </div>`;
+    ${b} = ${c} / x
+    <span class="inlineAnswer">
+      x = <input class="smallInput" id="${id}" type="number">
+    </span>`;
 }
 
 
+/* a · x = b */
 function eqMultiply(id){
 
   let a=rand(2,20);
@@ -208,15 +208,14 @@ function eqMultiply(id){
   answers[id]=x;
 
   return `
-  ${a} · x = ${b}
-  <div class="answer">
-    x = <input id="${id}" type="number">
-  </div>`;
+    ${a} · x = ${b}
+    <span class="inlineAnswer">
+      x = <input class="smallInput" id="${id}" type="number">
+    </span>`;
 }
 
 
 /* TEKSTUALNI */
-
 function wordDifference(id){
 
   let n1=randomName();
@@ -230,18 +229,15 @@ function wordDifference(id){
   answers[id]=diff;
 
   return `
-  ${n1} köpte en tårta för ${p1} kr och
-  ${n2} betalade ${p2} kr.
-  Hur mycket dyrare var den första?
-
-  <div class="answer">
-    Svar: <input id="${id}" type="number">
-  </div>`;
+    ${n1} köpte en tårta för ${p1} kr och
+    ${n2} betalade ${p2} kr.
+    Hur mycket dyrare var den första?
+    <br><br>
+    Svar: <input class="bigInput" id="${id}" type="number">`;
 }
 
 
-/* RANDOM ZADATAK */
-
+/* RANDOM */
 function randomTask(id){
 
   let t=rand(1,4);
@@ -265,25 +261,27 @@ function generateTest(){
   for(let q=1;q<=6;q++){
 
     html+=`
-    <div class="task">
-      <div class="number">${q}.</div>
+      <div class="task">
 
-      <div class="sub">
-        <div class="label">a.</div>
-        <div class="text">${randomTask("q"+q+"a")}</div>
-      </div>
+        <div class="sub">
+          <span class="number">${q}.</span>
+          <span class="label">a)</span>
+          <div class="text">${randomTask("q"+q+"a")}</div>
+        </div>
 
-      <div class="sub">
-        <div class="label">b.</div>
-        <div class="text">${randomTask("q"+q+"b")}</div>
-      </div>
+        <div class="sub">
+          <span class="number" style="visibility:hidden">${q}.</span>
+          <span class="label">b)</span>
+          <div class="text">${randomTask("q"+q+"b")}</div>
+        </div>
 
-      <div class="sub">
-        <div class="label">c.</div>
-        <div class="text">${randomTask("q"+q+"c")}</div>
-      </div>
+        <div class="sub">
+          <span class="number" style="visibility:hidden">${q}.</span>
+          <span class="label">c)</span>
+          <div class="text">${randomTask("q"+q+"c")}</div>
+        </div>
 
-    </div>`;
+      </div>`;
   }
 
   document.getElementById("questions").innerHTML=html;
