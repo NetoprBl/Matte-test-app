@@ -155,8 +155,11 @@ function frac(top,bottom){
 
 // JEDNACINE
 function eqDivide1(id){ 
-  let a=rand(2,10); let b=rand(2,10); let x=a*b; answers[id]=x;
-  return `${b} = x / ${a} <span class="inlineAnswer">x = <input class="smallInput" id="${id}" type="number"></span>`;
+  let a=rand(2,10);
+  let b=rand(2,10);
+  let x=a*b;
+  answers[id]=x;
+  return `${frac(b,"x")} = ${a} <span class="inlineAnswer">x = <input class="smallInput" id="${id}" type="number"></span>`;
 }
 
 function eqDivide2(id){
