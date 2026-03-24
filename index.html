@@ -52,7 +52,7 @@ body{
   margin-left:40px;
   margin-bottom:20px;
   display:flex;
-  align-items:center;
+  align-items:flex-start; /* poravnanje po top */
   gap:10px;
 }
 
@@ -69,7 +69,9 @@ body{
 
 /* ODGOVOR ISTI RED */
 .inlineAnswer{
-  margin-left:40px;
+  margin-left:20px;
+  margin-top:0;
+  flex-shrink:0;
 }
 
 /* UŽI INPUT */
@@ -86,6 +88,21 @@ body{
   padding:7px;
   font-size:18px;
   text-align:center;
+}
+
+/* PRAVI RAZLOMAK */
+.frac{
+  display:inline-block;
+  text-align:center;
+  vertical-align:middle;
+  margin:0 5px;
+}
+.frac .top{
+  display:block;
+  border-bottom:2px solid black;
+}
+.frac .bottom{
+  display:block;
 }
 
 /* Dugmad */
@@ -131,15 +148,22 @@ const names = ["Stefan","Axmer","Filip","Vasko","Tadija","Tore","Tobias","Noah"]
 function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
 function randomName(){ return names[rand(0,names.length-1)]; }
 
+// PRAVI RAZLOMAK
+function frac(top,bottom){
+  return `<span class="frac"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
+}
+
 // JEDNACINE
 function eqDivide1(id){ 
   let a=rand(2,10); let b=rand(2,10); let x=a*b; answers[id]=x;
   return `${b} = x / ${a} <span class="inlineAnswer">x = <input class="smallInput" id="${id}" type="number"></span>`;
 }
+
 function eqDivide2(id){
   let x=rand(2,10); let b=rand(2,10); let c=b*x; answers[id]=x;
-  return `${b} = ${c} / x <span class="inlineAnswer">x = <input class="smallInput" id="${id}" type="number"></span>`;
+  return `${b} = ${frac(c,"x")} <span class="inlineAnswer">x = <input class="smallInput" id="${id}" type="number"></span>`;
 }
+
 function eqMultiply(id){
   let a=rand(2,20); let x=rand(2,15); let b=a*x; answers[id]=x;
   return `${a} · x = ${b} <span class="inlineAnswer">x = <input class="smallInput" id="${id}" type="number"></span>`;
