@@ -4,15 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Matteövning</title>
+<title>Matteprov</title>
 
 <style>
-body{
-  font-family: Arial;
-  text-align:center;
-  padding:15px;
-}
-
+body{font-family:Arial;text-align:center;padding:15px;}
 .page{display:none;}
 .active{display:block;}
 
@@ -34,27 +29,16 @@ button{
 
 <body>
 
-<!-- STRANA 1 -->
+<!-- START -->
 <div id="page1" class="page active">
 
-<h1>Matteövning</h1>
-
-<p>Välj nivå:</p>
-
-<select id="level">
-  <option value="4">Årskurs 4</option>
-  <option value="5">Årskurs 5</option>
-  <option value="6">Årskurs 6</option>
-</select>
-
-<br><br>
-
+<h1>Matteprov</h1>
 <button onclick="startTest()">Starta test</button>
 
 </div>
 
 
-<!-- STRANA 2 -->
+<!-- TEST -->
 <div id="page2" class="page">
 
 <h2>Test</h2>
@@ -68,7 +52,7 @@ button{
 </div>
 
 
-<!-- STRANA 3 -->
+<!-- RESULTAT -->
 <div id="page3" class="page">
 
 <h2>Resultat</h2>
@@ -80,6 +64,7 @@ button{
 </div>
 
 
+
 <script>
 
 /* =========================
@@ -87,82 +72,178 @@ button{
 ========================= */
 
 let answers = {};
-let level = 4;
+
+const names = [
+"Stefan","Axmer","Filip","Vasko",
+"Tadija","Tore","Tobias","Noah"
+];
 
 function rand(min,max){
   return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-
-/* =========================
-   GENERATOR ZADATAKA
-========================= */
-
-function taskArithmetic(id){
-
-  let a = rand(1,50);
-  let b = rand(1,50);
-
-  answers[id]=a+b;
-
-  return a + " + " + b + " = <input id='"+id+"' type='number'>";
+function randomName(){
+  return names[rand(0,names.length-1)];
 }
 
 
-function taskMultiply(id){
+/* =========================
+   TIPOVI ZADATAKA
+========================= */
+
+
+/* x / a = b */
+function eqDivide1(id){
 
   let a = rand(2,10);
   let b = rand(2,10);
 
-  answers[id]=a*b;
-
-  return a + " × " + b + " = <input id='"+id+"' type='number'>";
-}
-
-
-function taskEquation(id){
-
-  let x = rand(2,10);
-  let d = rand(2,10);
-
-  let left = x/d;
+  let x = a*b;
 
   answers[id]=x;
 
-  return left + " = x / " + d + " → x = <input id='"+id+"' type='number'>";
+  return b + " = x / " + a +
+  " → x = <input id='"+id+"' type='number'>";
 }
 
 
-function taskWord(id){
+/* b = c / x */
+function eqDivide2(id){
 
-  let apples = rand(5,20);
-  let eat = rand(1,apples-1);
+  let x = rand(2,10);
+  let b = rand(2,10);
 
-  answers[id]=apples-eat;
+  let c = b*x;
 
-  return "Anna har " + apples +
-  " äpplen. Hon äter " + eat +
-  ". Hur många är kvar? <input id='"+id+"' type='number'>";
+  answers[id]=x;
+
+  return b + " = " + c + " / x → x = <input id='"+id+"' type='number'>";
+}
+
+
+/* a · x = b */
+function eqMultiply(id){
+
+  let a = rand(2,20);
+  let x = rand(2,20);
+
+  let b = a*x;
+
+  answers[id]=x;
+
+  return a + " · x = " + b +
+  " → x = <input id='"+id+"' type='number'>";
+}
+
+
+/* x · a = b */
+function eqMultiply2(id){
+
+  let a = rand(10,50);
+  let x = rand(2,10);
+
+  let b = a*x;
+
+  answers[id]=x;
+
+  return "x · " + a + " = " + b +
+  " → x = <input id='"+id+"' type='number'>";
+}
+
+
+/* Okrugli veliki brojevi */
+function eqRound(id){
+
+  let a = [20,30,40,50,100,200,300][rand(0,6)];
+  let x = rand(2,10);
+
+  let b = a*x;
+
+  answers[id]=x;
+
+  return a + " · x = " + b +
+  " → x = <input id='"+id+"' type='number'>";
+}
+
+
+/* Tekstualni zadatak — cena */
+function wordPrice(id){
+
+  let name = randomName();
+
+  let qty = rand(3,8);
+  let pricePer = rand(5,15);
+
+  let total = qty * pricePer;
+
+  let money = rand(40,80);
+
+  let result = Math.floor(money / pricePer);
+
+  answers[id]=result;
+
+  return name + " köpte " + qty +
+  " glassar för " + total +
+  " kr. Hur många glassar kan han köpa för " +
+  money + " kr? <input id='"+id+"' type='number'>";
+}
+
+
+/* Tekstualni — razlika cena */
+function wordDifference(id){
+
+  let n1 = randomName();
+  let n2 = randomName();
+
+  let p1 = rand(120,200);
+  let p2 = rand(100,180);
+
+  let diff = Math.abs(p1-p2);
+
+  answers[id]=diff;
+
+  return n1 + " köpte en tårta för " +
+  p1 + " kr och " + n2 +
+  " betalade " + p2 +
+  " kr. Hur mycket dyrare var den första? <input id='"+id+"' type='number'>";
 }
 
 
 /* =========================
-   GENERISI CEO TEST
+   RANDOM IZBOR ZADATKA
+========================= */
+
+function randomTask(id){
+
+  let type = rand(1,7);
+
+  if(type===1) return eqDivide1(id);
+  if(type===2) return eqDivide2(id);
+  if(type===3) return eqMultiply(id);
+  if(type===4) return eqMultiply2(id);
+  if(type===5) return eqRound(id);
+  if(type===6) return wordPrice(id);
+
+  return wordDifference(id);
+}
+
+
+/* =========================
+   GENERISI TEST
 ========================= */
 
 function generateTest(){
 
-  answers={};
-
+  answers = {};
   let html="";
 
   for(let q=1;q<=6;q++){
 
     html += "<p>" + q + ")<br>";
 
-    html += "a) " + taskArithmetic("q"+q+"a") + "<br>";
-    html += "b) " + taskMultiply("q"+q+"b") + "<br>";
-    html += "c) " + taskWord("q"+q+"c");
+    html += "a) " + randomTask("q"+q+"a") + "<br>";
+    html += "b) " + randomTask("q"+q+"b") + "<br>";
+    html += "c) " + randomTask("q"+q+"c");
 
     html += "</p>";
   }
@@ -185,11 +266,7 @@ function showPage(id){
 }
 
 function startTest(){
-
-  level = document.getElementById("level").value;
-
   generateTest();
-
   showPage("page2");
 }
 
@@ -209,11 +286,11 @@ function newTest(){
 
 function finishTest(){
 
-  let score=0;
+  let score = 0;
 
   for(let id in answers){
 
-    let value=document.getElementById(id).value;
+    let value = document.getElementById(id).value;
 
     if(value==="") continue;
 
