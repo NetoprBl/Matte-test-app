@@ -7,21 +7,14 @@
 <title>Matteprov</title>
 
 <style>
-/* Jednostavan izgled za telefon */
-
 body{
   font-family: Arial;
-  text-align: center;
-  padding: 15px;
+  text-align:center;
+  padding:15px;
 }
 
-.page{
-  display:none;
-}
-
-.active{
-  display:block;
-}
+.page{ display:none; }
+.active{ display:block; }
 
 input{
   width:80px;
@@ -41,88 +34,22 @@ button{
 
 <body>
 
-<!-- =========================
-     STRANA 1 — START
-========================= -->
+<!-- STRANA 1 -->
 <div id="page1" class="page active">
 
 <h1>Matteprov</h1>
-
 <button onclick="startTest()">Starta test</button>
 
 </div>
 
 
-<!-- =========================
-     STRANA 2 — TEST
-========================= -->
+<!-- STRANA 2 -->
 <div id="page2" class="page">
 
 <h2>Test</h2>
 
 <form id="testForm">
-
-<!-- 6 zadataka x 3 potpitanja -->
-
-<p>1) a) 6 = x / 4 → x =
-<input id="q1a" type="number">
-
-b) 5 + 3 =
-<input id="q1b" type="number">
-
-c) 12 − 7 =
-<input id="q1c" type="number"></p>
-
-
-<p>2) a) 3 × 4 =
-<input id="q2a" type="number">
-
-b) 20 / 5 =
-<input id="q2b" type="number">
-
-c) 9 + 8 =
-<input id="q2c" type="number"></p>
-
-
-<p>3) a) 15 − 6 =
-<input id="q3a" type="number">
-
-b) 2 × 9 =
-<input id="q3b" type="number">
-
-c) 16 / 2 =
-<input id="q3c" type="number"></p>
-
-
-<p>4) a) 7 + 5 =
-<input id="q4a" type="number">
-
-b) 30 / 6 =
-<input id="q4b" type="number">
-
-c) 10 − 3 =
-<input id="q4c" type="number"></p>
-
-
-<p>5) a) 8 × 3 =
-<input id="q5a" type="number">
-
-b) 18 / 3 =
-<input id="q5b" type="number">
-
-c) 11 + 6 =
-<input id="q5c" type="number"></p>
-
-
-<p>6) a) 14 − 9 =
-<input id="q6a" type="number">
-
-b) 5 × 5 =
-<input id="q6b" type="number">
-
-c) 21 / 7 =
-<input id="q6c" type="number"></p>
-
+<div id="questions"></div>
 </form>
 
 <button onclick="finishTest()">Avsluta test</button>
@@ -130,13 +57,10 @@ c) 21 / 7 =
 </div>
 
 
-<!-- =========================
-     STRANA 3 — REZULTAT
-========================= -->
+<!-- STRANA 3 -->
 <div id="page3" class="page">
 
 <h2>Resultat</h2>
-
 <h1 id="score"></h1>
 
 <button onclick="showTest()">Rätta test</button>
@@ -145,28 +69,90 @@ c) 21 / 7 =
 </div>
 
 
-
 <script>
 
 /* =========================
-   Funkcije za menjanje strana
+   GLOBALNE PROMENLJIVE
 ========================= */
 
-function startTest(){
-  showPage("page2");
+let answers = {};
+
+
+/* =========================
+   GENERATOR ZADATAKA
+========================= */
+
+function rand(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
 }
 
-function showTest(){
-  showPage("page2");
+
+/* Generise jedan podzadatak */
+function generateTask(id){
+
+  let type = rand(1,4);
+
+  let a,b,text,correct;
+
+  if(type===1){ // sabiranje
+    a=rand(1,20);
+    b=rand(1,20);
+    text = a + " + " + b + " = ";
+    correct = a+b;
+  }
+
+  else if(type===2){ // oduzimanje
+    a=rand(10,30);
+    b=rand(1,10);
+    text = a + " − " + b + " = ";
+    correct = a-b;
+  }
+
+  else if(type===3){ // mnozenje
+    a=rand(2,10);
+    b=rand(2,10);
+    text = a + " × " + b + " = ";
+    correct = a*b;
+  }
+
+  else{ // deljenje
+    b=rand(2,10);
+    correct=rand(2,10);
+    a=b*correct;
+    text = a + " / " + b + " = ";
+  }
+
+  answers[id] = correct;
+
+  return text + '<input id="'+id+'" type="number">';
 }
 
-function newTest(){
 
-  // Reset svih polja
-  document.getElementById("testForm").reset();
+/* Generise ceo test */
+function generateTest(){
 
-  showPage("page1");
+  answers = {};
+
+  let html="";
+
+  for(let q=1;q<=6;q++){
+
+    html += "<p>" + q + ") ";
+
+    html += "a) " + generateTask("q"+q+"a") + "<br>";
+    html += "b) " + generateTask("q"+q+"b") + "<br>";
+    html += "c) " + generateTask("q"+q+"c");
+
+    html += "</p>";
+  }
+
+  document.getElementById("questions").innerHTML = html;
 }
+
+
+/* =========================
+   NAVIGACIJA
+========================= */
 
 function showPage(id){
 
@@ -177,41 +163,36 @@ function showPage(id){
   document.getElementById(id).classList.add("active");
 }
 
+function startTest(){
+  generateTest();
+  showPage("page2");
+}
 
-/* =========================
-   Tacni odgovori
-========================= */
+function showTest(){
+  showPage("page2");
+}
 
-const answers = {
-
-  q1a:24, q1b:8, q1c:5,
-  q2a:12, q2b:4, q2c:17,
-  q3a:9,  q3b:18, q3c:8,
-  q4a:12, q4b:5,  q4c:7,
-  q5a:24, q5b:6,  q5c:17,
-  q6a:5,  q6b:25, q6c:3
-
-};
+function newTest(){
+  document.getElementById("testForm").reset();
+  showPage("page1");
+}
 
 
 /* =========================
-   Zavrsavanje testa
+   OCENJIVANJE
 ========================= */
 
 function finishTest(){
 
-  let score = 0;
+  let score=0;
 
   for(let id in answers){
 
-    let value = document.getElementById(id).value;
+    let value=document.getElementById(id).value;
 
-    // Ako nije popunjeno → 0 bodova
-    if(value === "") continue;
+    if(value==="") continue;
 
-    if(Number(value) === answers[id]){
-      score++;
-    }
+    if(Number(value)===answers[id]) score++;
   }
 
   document.getElementById("score").innerText =
