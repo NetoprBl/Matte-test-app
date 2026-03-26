@@ -43,6 +43,10 @@ body{
   font-size:18px;
 }
 
+.wrong{
+  background:#ffd6d6; /* blago crveno */
+}
+
 /* REDNI BROJ */
 .number{
   font-weight:bold;
@@ -139,12 +143,13 @@ button{
 <div id="page3" class="page center">
   <h2>Resultat</h2>
   <h1 id="score"></h1>
-  <button onclick="goToPage(2)">Rätta test</button>
-  <button onclick="goToPage(1)">Nytt test</button>
+  <button onclick="correctTest()">Rätta test</button>
+  <button onclick="newTest()">Nytt test</button>
 </div>
 
 <script>
 // GLOBALNO
+let correctionMode = false;
 let answers = {};
 const names = ["Stefan","Axmer","Filip","Vasko","Tadija","Tore","Tobias","Noah"];
 
@@ -154,6 +159,44 @@ function randomName(){ return names[rand(0,names.length-1)]; }
 // PRAVI RAZLOMAK
 function frac(top,bottom){
   return `<span class="frac"><span class="top">${top}</span><span class="bottom">${bottom}</span></span>`;
+}
+
+function markAnswers(){
+
+  for(let id in answers){
+
+    let input = document.getElementById(id);
+    let value = input.value;
+
+    if(value==="" || Number(value)!==answers[id]){
+
+      // NETACNO
+      input.classList.add("wrong");
+      input.disabled = false;
+
+    }else{
+
+      // TACNO
+      input.classList.remove("wrong");
+      input.disabled = true;
+
+    }
+  }
+}
+
+function newTest(){
+  correctionMode = false;
+  goToPage(1);
+}
+
+function correctTest(){
+
+  correctionMode = true;
+
+  goToPage(2);
+
+  // označi tačne i netačne odgovore
+  setTimeout(markAnswers, 50);
 }
 
 // JEDNACINE
@@ -206,20 +249,32 @@ function generateTest(){
 
 // PRELAZ IZMEDJU STRANICA
 function goToPage(n){
+
   document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
   document.getElementById("page"+n).classList.add("active");
-  if(n===2) generateTest();
+
+  if(n===2 && !correctionMode){
+    generateTest(); // samo ako NIJE ispravka
+  }
 }
 
 // OCJENJIVANJE
 function finishTest(){
+
   let score=0;
+
   for(let id in answers){
+
     let value=document.getElementById(id).value;
-    if(value==="") continue;
+
+    if(value==="" ) continue;
+
     if(Number(value)===answers[id]) score++;
   }
-  document.getElementById("score").innerText = score + " / 18 poäng";
+
+  document.getElementById("score").innerText =
+    score + " / 18 poäng";
+
   goToPage(3);
 }
 </script>
