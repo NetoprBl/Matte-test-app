@@ -300,7 +300,7 @@ function buildReport(score) {
 }
 
 function buildTextReport(score) {
-  let report = `Matteprov resultat: ${score} / 18 poäng\n\n`;
+  let report = `Matteprov resultat: ${score} / 18 poäng\n\n\n`;
 
   for (let id in answers) {
     let input = document.getElementById(id);
@@ -309,9 +309,9 @@ function buildTextReport(score) {
     let text = input.closest(".text").innerText;
 
     if (Number(value) === correct) {
-      report += `✅ ${text} → ${value}\n`; // tačno
+      report += `✅    ${text}   →   ${value}\n\n`; // tačno
     } else {
-      report += `❌ ${text} → ${value}\n`; // netačno
+      report += `❌    ${text}   →   ${value}\n\n`; // netačno
     }
   }
 
