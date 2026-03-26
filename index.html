@@ -320,7 +320,7 @@ function buildTextReport(score) {
 
 function sendEmail(score){
   let messageText = buildTextReport(score); // HTML generisan u Koraku 2
-alert(messageText); 
+ 
   emailjs.send("service_tiyv9xj", "template_ak5fq6p", {
     name: "Stefan",          // ime djeteta
     time: new Date().toLocaleString(),
