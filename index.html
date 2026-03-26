@@ -301,7 +301,7 @@ function buildReport(score) {
 
 function sendEmail(score){
   let messageHTML = buildReport(score); // HTML generisan u Koraku 2
-console.log("Slanje maila sa HTML-om:", messageHTML);
+alert(messageHTML); 
   emailjs.send("service_tiyv9xj", "template_ak5fq6p", {
     name: "Stefan",          // ime djeteta
     time: new Date().toLocaleString(),
