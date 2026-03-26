@@ -274,9 +274,51 @@ function finishTest(){
 
   document.getElementById("score").innerText =
     score + " / 18 poäng";
+    
+    let resultText = score + " / 18 poäng";
+sendEmail(resultText);
 
   goToPage(3);
 }
+
+function buildReport(score){
+
+  let report = `<h2>Matteprov resultat: ${score} / 18 poäng</h2>`;
+
+  for(let id in answers){
+
+    let input = document.getElementById(id);
+    let value = input.value;
+    let correct = answers[id];
+
+    let text = input.closest(".text").innerText;
+
+    if(Number(value) === correct){
+      report += `<p>${text} → ${value}</p>`;
+    }else{
+      report += `<p style="color:red">${text} → ${value || "(tomt)"}</p>`;
+    }
+  }
+
+  return report;
+}
+
+function sendEmail(score){
+
+  let messageHTML = buildReport(score);
+
+  emailjs.send("service_tiyv9xj","template_ak5fq6p",{
+    message: messageHTML
+  });
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+<script>
+(function(){
+  emailjs.init("TVOJ_PUBLIC_KEY");
+})();
 </script>
 </body>
 </html>
