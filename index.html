@@ -299,13 +299,32 @@ function buildReport(score) {
   return report;
 }
 
+function buildTextReport(score) {
+  let report = `Matteprov resultat: ${score} / 18 poäng\n\n`;
+
+  for (let id in answers) {
+    let input = document.getElementById(id);
+    let value = input.value || "(tomt)";
+    let correct = answers[id];
+    let text = input.closest(".text").innerText;
+
+    if (Number(value) === correct) {
+      report += `✅ ${text} → ${value}\n`; // tačno
+    } else {
+      report += `❌ ${text} → ${value}\n`; // netačno
+    }
+  }
+
+  return report;
+}
+
 function sendEmail(score){
-  let messageHTML = buildReport(score); // HTML generisan u Koraku 2
-alert(messageHTML); 
+  let messageText = buildTextReport(score); // HTML generisan u Koraku 2
+alert(messageText); 
   emailjs.send("service_tiyv9xj", "template_ak5fq6p", {
     name: "Stefan",          // ime djeteta
     time: new Date().toLocaleString(),
-    message: messageHTML    // <-- OVDJE IDE HTML KOJI POPUNJAVA {{message}}
+    message: messageText    // <-- OVDJE IDE HTML KOJI POPUNJAVA {{message}}
   })
   .then(function(response){
     console.log("Mail poslan!", response.status, response.text);
